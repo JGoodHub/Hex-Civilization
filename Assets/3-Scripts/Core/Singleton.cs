@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GoodHub.Core {
+namespace MellowMadness.Core {
 
     public class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
 
@@ -26,25 +26,6 @@ namespace GoodHub.Core {
                 } else {
                     return _instance;
                 }
-            }
-        }
-
-        [Header("Singleton Settings")]
-        [SerializeField] private bool persistent;
-
-        private void Awake() {
-            if (_instance == null) {
-                _instance = Instance;
-
-                //Debug.Log("Singleton " + typeof(T).ToString() + " Instance Set");
-
-                if (persistent) {
-                    _instance.transform.parent = null;
-                    DontDestroyOnLoad(_instance.gameObject);
-                }
-            } else {
-                //If the instance is already set then this version of the singleton should be destroyed to maintain the pattern
-                Destroy(gameObject);
             }
         }
     }
