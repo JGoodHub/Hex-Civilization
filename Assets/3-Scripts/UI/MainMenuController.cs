@@ -4,19 +4,28 @@ using UnityEngine;
 using MellowMadness.Core;
 
 public class MainMenuController : MonoBehaviour {
-    
+
+    [Header("Menu Panels Array")]
+    [SerializeField] private GameObject[] menuPanels;
+
     #region Event Handlers
 
-    public void ButtonStartNewGame() {
+    public void CallbackStartNewGame() {
         SceneController.Instance.LoadGameScene();
     }
 
-    public void ButtonOpenSettings () {
-        //Open the settings panel
+    public void CallbackQuitGame() {
+        SceneController.Instance.QuitGame();
     }
 
-    public void ButtonQuitGame () {
-        SceneController.Instance.QuitGame();
+    public void CallbackOpenMenu (int menuIndex) {
+        if (menuIndex < menuPanels.Length) {
+            foreach (GameObject menuPanel in menuPanels) {
+                menuPanel.SetActive(false);
+            }
+
+            menuPanels[menuIndex].SetActive(true);
+        }
     }
 
     #endregion
