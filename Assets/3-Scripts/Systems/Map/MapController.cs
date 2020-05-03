@@ -5,31 +5,40 @@ using UnityEngine;
 public class MapController : MonoBehaviour {
 
     [System.Serializable]
-    public struct BiomeSet {
+    public struct Biome {
         public string name;
-        public Sprite[] sprites;
+        public GameObject[] primarys;
+        //public GameObject[] boundarys;
     }
 
-    public int seed;
-
+    [Header("Generation Resources")]
     public Transform tileContainer;
-    public GameObject[] tilePrefabs;
+    public Biome[] biomes;
+
+    [Header("Generation Parameters")]
+    public int seed;
+    public Vector2Int boardSize;
+    public float biomeNoiseScale = 5f;
+
+    [Header("Elevation Settings")]
+    public float elevationNoiseScale = 5f;
+    [Range(0f, 1f)] public float oceansBoundary = 0.25f;
+    [Range(0f, 1f)] public float moutainsBoundary = 0.75f;
 
     private HashSet<GameObject> tileObjects = new HashSet<GameObject>();
-
-    public Vector2Int boardSize;
-    public float noiseScale = 5f;
 
     private void Start() {
         Random.InitState(seed);
 
         for (int y = 0; y < boardSize.y; y++) {
             for (int x = 0; x < boardSize.x; x++) {
-                Vector2Int gridPos = new Vector2Int(x, y);
-                int elavationIndex = Mathf.FloorToInt(GetElevationAtGridPosition(gridPos) * tilePrefabs.Length);
-                GameObject tileClone = Instantiate(tilePrefabs[elavationIndex], GridToWorldPosition(gridPos), Quaternion.identity);
-                tileObjects.Add(tileClone);
+                Vector2Int gridPosition = new Vector2Int(x, y);
+                int elevationIndex = GetElevationAtGridPosition(gridPosition);
 
+                GameObject tilePrefab = biomes[elevationIndex].primarys[Random.Range(0, biomes[elevationIndex].primarys.Length)];
+                GameObject tileClone = Instantiate(tilePrefab, GridToWorldPosition(gridPosition), Quaternion.identity);
+
+                tileObjects.Add(tileClone);
                 tileClone.transform.parent = tileContainer;
             }
         }
@@ -45,11 +54,23 @@ public class MapController : MonoBehaviour {
         return Vector2Int.zero;
     }
 
-    private float GetElevationAtGridPosition(Vector2Int position) {
-        Vector2 noiseSamplePosition = GridToWorldPosition(position) * noiseScale;
-        return Mathf.Clamp01(Mathf.PerlinNoise(noiseSamplePosition.x, noiseSamplePosition.y));
+    private int GetElevationAtGridPosition(Vector2Int position) {
+        Vector2 noiseSamplePosition = GridToWorldPosition(position) * elevationNoiseScale;
+        float noiseValue = Mathf.Clamp01(Mathf.PerlinNoise(noiseSamplePosition.x, noiseSamplePosition.y));
+        if (noiseValue <= oceansBoundary) {
+            return 0;
+        } else if (noiseValue > oceansBoundary && noiseValue < moutainsBoundary) {
+            return 1;
+        } else {
+            return 2;
+        }
     }
 
+    private int GetBiomeAtGridPosition(Vector2Int position) {
+        return 0;
+    }
+
+    [Header("Debug")]
     public bool debug;
     private void OnDrawGizmos() {
         if (debug) {
@@ -57,7 +78,7 @@ public class MapController : MonoBehaviour {
 
             for (int y = 0; y < boardSize.y; y++) {
                 for (int x = 0; x < boardSize.x; x++) {
-                    float level = GetElevationAtGridPosition(new Vector2Int(x, y));
+                    float level = 0.333f * GetElevationAtGridPosition(new Vector2Int(x, y));
                     Gizmos.color = new Color(level, level, level);
                     Gizmos.DrawSphere(GridToWorldPosition(new Vector2Int(x, y)), Tile.SIZE.x / 2);
                 }

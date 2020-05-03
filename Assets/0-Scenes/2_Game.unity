@@ -321,16 +321,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3fdc11fcbde9594ab3e411ac61d008c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  seed: 0
   tileContainer: {fileID: 2079103735}
-  tilePrefabs:
-  - {fileID: 1165891717517671249, guid: 32a1a0999b0936549ac91cd8c9fc6605, type: 3}
-  - {fileID: 9179586760941976033, guid: ffef818dac053c546be3e303a6580fef, type: 3}
-  - {fileID: 3748499828265391099, guid: 395dd338713ba884a989c3fc1f2a7cea, type: 3}
-  - {fileID: 5629518103177557792, guid: 916502b6dc766944ca92debcfe92e1b8, type: 3}
-  - {fileID: 1463311464683220095, guid: f8f3946d52fcca84e93a8f4d87a5f083, type: 3}
+  biomes:
+  - name: Ocean
+    primarys:
+    - {fileID: 1165891717517671249, guid: 01a7f277aa4115e4eb09c21a43197d03, type: 3}
+  - name: Grassland
+    primarys:
+    - {fileID: 1165891717517671249, guid: 32a1a0999b0936549ac91cd8c9fc6605, type: 3}
+    - {fileID: 9179586760941976033, guid: ffef818dac053c546be3e303a6580fef, type: 3}
+    - {fileID: 3748499828265391099, guid: 395dd338713ba884a989c3fc1f2a7cea, type: 3}
+  - name: Mountain
+    primarys:
+    - {fileID: 5629518103177557792, guid: 916502b6dc766944ca92debcfe92e1b8, type: 3}
+    - {fileID: 1463311464683220095, guid: f8f3946d52fcca84e93a8f4d87a5f083, type: 3}
+  seed: 0
   boardSize: {x: 50, y: 50}
-  noiseScale: 0.3
+  biomeNoiseScale: 5
+  elevationNoiseScale: 0.1
+  oceansBoundary: 0.4
+  moutainsBoundary: 0.7
   debug: 0
 --- !u!1 &1311432299
 GameObject:
