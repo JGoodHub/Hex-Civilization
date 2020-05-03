@@ -25,7 +25,9 @@ public class MapController : MonoBehaviour {
 
         for (int y = 0; y < boardSize.y; y++) {
             for (int x = 0; x < boardSize.x; x++) {
-                GameObject tileClone = Instantiate(tilePrefabs[Random.Range(0, tilePrefabs.Length)], GridToWorldPosition(new Vector2Int(x, y)), Quaternion.identity);
+                Vector2Int gridPos = new Vector2Int(x, y);
+                int elavationIndex = Mathf.FloorToInt(GetElevationAtGridPosition(gridPos) * tilePrefabs.Length);
+                GameObject tileClone = Instantiate(tilePrefabs[elavationIndex], GridToWorldPosition(gridPos), Quaternion.identity);
                 tileObjects.Add(tileClone);
 
                 tileClone.transform.parent = tileContainer;
@@ -43,6 +45,10 @@ public class MapController : MonoBehaviour {
         return Vector2Int.zero;
     }
 
+    private float GetElevationAtGridPosition(Vector2Int position) {
+        Vector2 noiseSamplePosition = GridToWorldPosition(position) * noiseScale;
+        return Mathf.Clamp01(Mathf.PerlinNoise(noiseSamplePosition.x, noiseSamplePosition.y));
+    }
 
     public bool debug;
     private void OnDrawGizmos() {
@@ -51,13 +57,12 @@ public class MapController : MonoBehaviour {
 
             for (int y = 0; y < boardSize.y; y++) {
                 for (int x = 0; x < boardSize.x; x++) {
-                    Vector2 noiseSamplePosition = GridToWorldPosition(new Vector2Int(x, y));
-                    noiseSamplePosition *= noiseScale;
-                    float level = Mathf.Clamp01(Mathf.PerlinNoise(noiseSamplePosition.x, noiseSamplePosition.y));
+                    float level = GetElevationAtGridPosition(new Vector2Int(x, y));
                     Gizmos.color = new Color(level, level, level);
-                    Gizmos.DrawSphere(GridToWorldPosition(new Vector2Int(x, y)), 0.5f);
+                    Gizmos.DrawSphere(GridToWorldPosition(new Vector2Int(x, y)), Tile.SIZE.x / 2);
+                }
+            }
         }
     }
-}
-    }
+
 }

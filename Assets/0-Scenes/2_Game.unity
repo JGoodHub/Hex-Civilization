@@ -329,9 +329,9 @@ MonoBehaviour:
   - {fileID: 3748499828265391099, guid: 395dd338713ba884a989c3fc1f2a7cea, type: 3}
   - {fileID: 5629518103177557792, guid: 916502b6dc766944ca92debcfe92e1b8, type: 3}
   - {fileID: 1463311464683220095, guid: f8f3946d52fcca84e93a8f4d87a5f083, type: 3}
-  boardSize: {x: 16, y: 9}
-  noiseScale: 10
-  debug: 1
+  boardSize: {x: 50, y: 50}
+  noiseScale: 0.3
+  debug: 0
 --- !u!1 &1311432299
 GameObject:
   m_ObjectHideFlags: 0
