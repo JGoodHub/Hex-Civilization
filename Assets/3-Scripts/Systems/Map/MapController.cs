@@ -8,7 +8,7 @@ public class MapController : MonoBehaviour {
     public struct Biome {
         public string name;
         public GameObject[] primarys;
-        //public GameObject[] boundarys;
+        public GameObject[] boundarys;
     }
 
     [Header("Generation Resources")]
@@ -18,7 +18,6 @@ public class MapController : MonoBehaviour {
     [Header("Generation Parameters")]
     public int seed;
     public Vector2Int boardSize;
-    public float biomeNoiseScale = 5f;
 
     [Header("Elevation Settings")]
     public float elevationNoiseScale = 5f;
@@ -78,9 +77,9 @@ public class MapController : MonoBehaviour {
 
             for (int y = 0; y < boardSize.y; y++) {
                 for (int x = 0; x < boardSize.x; x++) {
-                    float level = 0.333f * GetElevationAtGridPosition(new Vector2Int(x, y));
+                    float level = 0.333f * GetElevationAtGridPosition(new Vector2Int(x, y));                                        
                     Gizmos.color = new Color(level, level, level);
-                    Gizmos.DrawSphere(GridToWorldPosition(new Vector2Int(x, y)), Tile.SIZE.x / 2);
+                    Gizmos.DrawCube(GridToWorldPosition(new Vector2Int(x, y)), Tile.SIZE);
                 }
             }
         }

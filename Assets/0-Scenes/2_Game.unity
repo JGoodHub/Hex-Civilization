@@ -326,20 +326,22 @@ MonoBehaviour:
   - name: Ocean
     primarys:
     - {fileID: 1165891717517671249, guid: 01a7f277aa4115e4eb09c21a43197d03, type: 3}
+    boundarys: []
   - name: Grassland
     primarys:
     - {fileID: 1165891717517671249, guid: 32a1a0999b0936549ac91cd8c9fc6605, type: 3}
     - {fileID: 9179586760941976033, guid: ffef818dac053c546be3e303a6580fef, type: 3}
     - {fileID: 3748499828265391099, guid: 395dd338713ba884a989c3fc1f2a7cea, type: 3}
+    boundarys: []
   - name: Mountain
     primarys:
     - {fileID: 5629518103177557792, guid: 916502b6dc766944ca92debcfe92e1b8, type: 3}
     - {fileID: 1463311464683220095, guid: f8f3946d52fcca84e93a8f4d87a5f083, type: 3}
+    boundarys: []
   seed: 0
   boardSize: {x: 50, y: 50}
-  biomeNoiseScale: 5
-  elevationNoiseScale: 0.1
-  oceansBoundary: 0.4
+  elevationNoiseScale: 0.15
+  oceansBoundary: 0.35
   moutainsBoundary: 0.7
   debug: 0
 --- !u!1 &1311432299
@@ -395,7 +397,7 @@ Camera:
   far clip plane: 100
   field of view: 60
   orthographic: 1
-  orthographic size: 4
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
