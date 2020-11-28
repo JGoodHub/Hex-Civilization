@@ -24,7 +24,7 @@ namespace ProceduralNoiseProject
 
         Texture2D texture;
 
-        void Start()
+        void Update()
         {
 
             texture = new Texture2D(width, height);
