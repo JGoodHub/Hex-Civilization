@@ -20,13 +20,13 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.64315593, g: 0.7974993, b: 0.9150943, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 9aa8ed67591432941bb76f12eb23ff91, type: 2}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1466013440}
-  m_IndirectSpecularColor: {r: 0.38359547, g: 0.53483695, b: 0.6327199, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -295,6 +295,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1080148487}
+  - {fileID: 963888889}
   - {fileID: 819500170}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -358,8 +359,94 @@ Transform:
   m_Children:
   - {fileID: 1311432302}
   m_Father: {fileID: 688757412}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &963888888
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 963888889}
+  - component: {fileID: 963888891}
+  - component: {fileID: 963888890}
+  m_Layer: 0
+  m_Name: Tile System Mini
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &963888889
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963888888}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 688757412}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &963888890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963888888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42c8fde83fd0a3043a60fd0506df0794, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  randomRotation: 1
+  batchSize: 8
+  tileContainer: {fileID: 1189669602}
+  oceanTile: {fileID: 2167128475472968014, guid: 6fef1cf953e461042a6734327304788e,
+    type: 3}
+  beachTile: {fileID: 2555452775188836528, guid: 88adee8dd93a3454b841978ae56906c3,
+    type: 3}
+  desertTile: {fileID: 0}
+  grassTile: {fileID: 2809505833335357031, guid: 7e31991bb3287754086ab49b27f62223,
+    type: 3}
+  flowersTile: {fileID: 0}
+  forestTile: {fileID: 146987964573785717, guid: 4705d5713a5fc8546b3fe291c2096de1,
+    type: 3}
+  tilePaletteMaterial: {fileID: 2100000, guid: dc53055695f57054fbbf7bdc4796d1fa, type: 2}
+--- !u!114 &963888891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963888888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20fc3e76f60ccdd458f2389a065e05da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useRandomSeed: 0
+  seed: 0
+  mapSize: {x: 60, y: 30}
+  verticalFallOff: 8
+  horizontalFallOff: 8
+  landSeedPoints: 8
+  landIterations: 9
+  islandSeedPoints: 5
+  islandMinExpansions: 0
+  islandMaxExpansions: 2
+  islandMinDistance: 2
+  adjacentOceanThreshold: 1
+  cullStrayBeaches: 1
+  forestFill: 0.5
+  forestNoiseScale: 0.02
+  removeBeachForests: 1
 --- !u!1 &1080148486
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +464,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1080148487
 Transform:
   m_ObjectHideFlags: 0
@@ -404,6 +491,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42c8fde83fd0a3043a60fd0506df0794, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  randomRotation: 0
+  batchSize: 4
   tileContainer: {fileID: 2079103735}
   oceanTile: {fileID: 2898518474249001851, guid: 2933286d81c495741bad366c90be8a4a,
     type: 3}
@@ -415,6 +504,7 @@ MonoBehaviour:
   flowersTile: {fileID: 0}
   forestTile: {fileID: 2299564496195673439, guid: ebc574c6ab4bf084587d1945864da4b2,
     type: 3}
+  tilePaletteMaterial: {fileID: 0}
 --- !u!114 &1080148489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -427,6 +517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fc3e76f60ccdd458f2389a065e05da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useRandomSeed: 1
   seed: 0
   mapSize: {x: 160, y: 90}
   verticalFallOff: 20
@@ -442,6 +533,36 @@ MonoBehaviour:
   forestFill: 0.5
   forestNoiseScale: 0.15
   removeBeachForests: 1
+--- !u!1 &1189669601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1189669602}
+  m_Layer: 0
+  m_Name: Tile Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1189669602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189669601}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2079103735}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1311432299
 GameObject:
   m_ObjectHideFlags: 0
@@ -480,8 +601,8 @@ Camera:
   m_GameObject: {fileID: 1311432299}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.64315593, g: 0.7974993, b: 0.9150943, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -612,13 +733,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1466013438}
-  m_LocalRotation: {x: 0.14644733, y: -0.8535527, z: 0.35355288, w: 0.35355532}
+  m_LocalRotation: {x: 0.35355338, y: -0.3535529, z: 0.1464463, w: 0.85355365}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 660086792}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 45.000004, y: -135, z: 0}
+  m_LocalEulerAnglesHint: {x: 45.000004, y: -45.000004, z: 0}
 --- !u!108 &1466013440
 Light:
   m_ObjectHideFlags: 0
@@ -719,7 +840,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1189669602}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

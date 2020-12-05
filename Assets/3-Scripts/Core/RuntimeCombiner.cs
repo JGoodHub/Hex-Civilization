@@ -10,20 +10,17 @@ namespace MellowMadness.Core
 
         public bool combineOnStart = true;
         public Material sharedMaterial;
+
+        //flags
         public bool useInt32Buffers;
+        public bool destroyChildMeshes;
+        public bool destroyAllChildren;
 
         // Start is called before the first frame update
         void Start()
         {
             if (combineOnStart)
-            {
-                CombineChildren(gameObject, sharedMaterial, useInt32Buffers);
-            }
-        }
-
-        public void CombineChildren()
-        {
-            CombineChildren(gameObject, sharedMaterial, useInt32Buffers);
+                Combine();
         }
 
         public void UseFirstMaterial()
@@ -33,12 +30,12 @@ namespace MellowMadness.Core
                 sharedMaterial = meshRen.sharedMaterial;
         }
 
-        public static void CombineChildren(GameObject obj, Material sharedMaterial, bool useInt32Buffers)
+        public void Combine()
         {
-            Vector3 worldPosition = obj.transform.position;
-            obj.transform.position = Vector3.zero;
+            Vector3 worldPosition = gameObject.transform.position;
+            gameObject.transform.position = Vector3.zero;
 
-            MeshFilter[] meshFilters = obj.GetComponentsInChildren<MeshFilter>();
+            MeshFilter[] meshFilters = gameObject.GetComponentsInChildren<MeshFilter>();
             CombineInstance[] combineInstances = new CombineInstance[meshFilters.Length];
 
             for (int i = 0; i < meshFilters.Length; i++)
@@ -48,8 +45,8 @@ namespace MellowMadness.Core
             }
 
             MeshFilter targetMeshFilter;
-            if (obj.TryGetComponent(out targetMeshFilter) == false)
-                targetMeshFilter = obj.AddComponent<MeshFilter>();
+            if (gameObject.TryGetComponent(out targetMeshFilter) == false)
+                targetMeshFilter = gameObject.AddComponent<MeshFilter>();
 
             targetMeshFilter.mesh = new Mesh();
             targetMeshFilter.mesh.indexFormat = useInt32Buffers ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16;
@@ -60,22 +57,30 @@ namespace MellowMadness.Core
             targetMeshFilter.mesh.RecalculateNormals();
 
             MeshRenderer targetMeshRen;
-            if (obj.TryGetComponent(out targetMeshRen) == false)
-                targetMeshRen = obj.AddComponent<MeshRenderer>();
+            if (gameObject.TryGetComponent(out targetMeshRen) == false)
+                targetMeshRen = gameObject.AddComponent<MeshRenderer>();
 
             targetMeshRen.sharedMaterial = sharedMaterial;
 
-            for (int i = 0; i < meshFilters.Length; i++)
+            if (destroyChildMeshes)
             {
-                if (meshFilters[i].gameObject != obj)
-                {
-                    Destroy(meshFilters[i].gameObject);
-                }
+                for (int i = 0; i < meshFilters.Length; i++)
+                    if (meshFilters[i].gameObject != gameObject)
+                        Destroy(meshFilters[i].gameObject);
             }
 
-            obj.transform.position = worldPosition;
-            obj.transform.rotation = Quaternion.identity;
-            obj.transform.localScale = Vector3.one;
+            if (destroyAllChildren)
+            {
+                Transform[] childTransforms = gameObject.GetComponentsInChildren<Transform>();
+
+                for (int i = 0; i < childTransforms.Length; i++)
+                    if (childTransforms[i].gameObject != gameObject)
+                        Destroy(childTransforms[i].gameObject);
+            }
+
+            gameObject.transform.position = worldPosition;
+            gameObject.transform.rotation = Quaternion.identity;
+            gameObject.transform.localScale = Vector3.one;
         }
 
     }

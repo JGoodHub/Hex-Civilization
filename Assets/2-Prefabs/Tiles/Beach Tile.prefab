@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &595390869831317678
 Transform:
   m_ObjectHideFlags: 0
@@ -180,7 +180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6345111821570654953
 Transform:
   m_ObjectHideFlags: 0
@@ -252,7 +252,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2555452775188836524}
   - component: {fileID: 2555452775188836531}
-  - component: {fileID: 7491432455892954011}
   m_Layer: 0
   m_Name: Beach Tile
   m_TagString: Untagged
@@ -290,21 +289,6 @@ MonoBehaviour:
   type: 4
   gridPosition: {x: 0, y: 0}
   adjacentTiles: []
---- !u!114 &7491432455892954011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2555452775188836528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f21a0ab6989407498415a9ae03122e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  combineOnStart: 1
-  sharedMaterial: {fileID: 2100000, guid: dc53055695f57054fbbf7bdc4796d1fa, type: 2}
-  useInt32Buffers: 0
 --- !u!1 &4800718870436536031
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,7 +306,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &708945323296271487
 Transform:
   m_ObjectHideFlags: 0
@@ -401,7 +385,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4188112876640857413
 Transform:
   m_ObjectHideFlags: 0
@@ -480,7 +464,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5003718806786108128
 Transform:
   m_ObjectHideFlags: 0

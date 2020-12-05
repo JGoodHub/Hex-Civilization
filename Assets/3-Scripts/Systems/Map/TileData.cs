@@ -16,6 +16,7 @@ public class TileData : MonoBehaviour
 
     public enum Type
     {
+        EMPTY = -1,
         OCEAN,
         GRASS,
         FLOWERS,

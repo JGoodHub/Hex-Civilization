@@ -8,6 +8,7 @@ public class TileGenerator : Singleton<TileGenerator>
 {
 
     [Header("Map Settings")]
+    public bool useRandomSeed;
     public int seed;
     public Vector2Int mapSize = new Vector2Int(160, 90);
     private int mapArea;
@@ -40,17 +41,23 @@ public class TileGenerator : Singleton<TileGenerator>
 
     void Start()
     {
+        if (useRandomSeed)
+            seed = int.Parse("" + System.DateTime.Now.Minute + System.DateTime.Now.Second + System.DateTime.Now.Millisecond);
+
         Random.InitState(seed);
 
-        mapSize.x += mapSize.x % 3 == 0 ? 0 : 3 - (mapSize.x % 3);
-        mapSize.y += mapSize.y % 3 == 0 ? 0 : 3 - (mapSize.y % 3);
+        int batchSize = TileRenderer.Instance.batchSize;
+        mapSize.x += mapSize.x % batchSize == 0 ? 0 : batchSize - (mapSize.x % batchSize);
+        mapSize.y += mapSize.y % batchSize == 0 ? 0 : batchSize - (mapSize.y % batchSize);
         mapArea = mapSize.x * mapSize.y;
 
-        ClearTileMap();
+        ClearMap();
 
         GenerateContinents();
 
         GenerateIslands();
+
+        CleanBorders();
 
         GenerateBeaches();
 
@@ -59,7 +66,7 @@ public class TileGenerator : Singleton<TileGenerator>
         //AdjustSeaLevel();
     }
 
-    private void ClearTileMap()
+    private void ClearMap()
     {
         map = new TileData.Type[mapSize.x, mapSize.y];
     }
@@ -101,6 +108,8 @@ public class TileGenerator : Singleton<TileGenerator>
 
             map = newMap;
         }
+
+
     }
 
     private void GenerateIslands()
@@ -108,7 +117,8 @@ public class TileGenerator : Singleton<TileGenerator>
         Vector2Int[] islandSeeds = new Vector2Int[islandSeedPoints];
 
         int islandIndex = 0;
-        while (islandIndex < islandSeedPoints)
+        int loopEscape = 0;
+        while (islandIndex < islandSeedPoints && loopEscape < 1000)
         {
             Vector2Int point = new Vector2Int(Random.Range(horizontalFallOff, mapSize.x - horizontalFallOff - 1), Random.Range(verticalFallOff, mapSize.y - verticalFallOff - 1));
 
@@ -118,6 +128,8 @@ public class TileGenerator : Singleton<TileGenerator>
                 islandSeeds[islandIndex] = point;
                 islandIndex++;
             }
+
+            loopEscape++;
         }
 
         foreach (Vector2Int islandSeed in islandSeeds)
@@ -142,6 +154,20 @@ public class TileGenerator : Singleton<TileGenerator>
                 for (int a = 0; a < shellTiles.Length; a++)
                 {
                     map[shellTiles[a].x, shellTiles[a].y] = TileData.Type.GRASS;
+                }
+            }
+        }
+    }
+
+    private void CleanBorders()
+    {
+        for (int y = 0; y < mapSize.y; y++)
+        {
+            for (int x = 0; x < mapSize.x; x++)
+            {
+                if (x == 0 || y == 0 || x == mapSize.x - 1 || y == mapSize.y - 1)
+                {
+                    map[x, y] = TileData.Type.OCEAN;
                 }
             }
         }
@@ -305,12 +331,8 @@ public class TileGenerator : Singleton<TileGenerator>
 
     public void Regenerate()
     {
-        //seed++;
-
         Start();
-        TileRenderer.Instance.EraseMap();
-        TileRenderer.Instance.RenderMap();
-
+        TileRenderer.Instance.DrawAllChunks();
     }
 
 }

@@ -10,17 +10,18 @@ public class TileRenderer : Singleton<TileRenderer>
 
     public class TileChunk
     {
-        public Vector2Int centerCoordinate;
-        public GameObject[] tiles;
+        public Vector2Int minCoords;
+        public GameObject container;
+        public RuntimeCombiner combiner;
     }
 
-    [Header("Generation Resources")]
+    [Header("Generation Settings")]
+    public bool randomRotation;
+    public int batchSize = 5;
     public Transform tileContainer;
-    private Dictionary<TileData.Type, Transform> tileParents;
-    private Dictionary<TileData.Type, List<TileChunk>> tileChuncks;
-    private List<GameObject> runtimeTiles = new List<GameObject>();
+    private List<TileChunk> tileChunks = new List<TileChunk>();
 
-    [Header("Nature Tiles")]
+    [Header("Nature Tiles Prefabs")]
     public GameObject oceanTile;
     public GameObject beachTile;
     public GameObject desertTile;
@@ -28,59 +29,19 @@ public class TileRenderer : Singleton<TileRenderer>
     public GameObject flowersTile;
     public GameObject forestTile;
 
+    [Header("Tile Palette")]
+    public Material tilePaletteMaterial;
+
     private void Start()
     {
-        RenderMap();
+        CreateChunks();
+
+        DrawAllChunks();
 
         GC.Collect();
         Resources.UnloadUnusedAssets();
-    }
 
-    public void RenderMap()
-    {
-        SetupTileContainers();
-
-        TileData.Type[,] tileMap = TileGenerator.Instance.map;
-
-        for (int y = 0; y < tileMap.GetLength(1); y++)
-        {
-            for (int x = 0; x < tileMap.GetLength(0); x++)
-            {
-                runtimeTiles.Add(PlaceTile(tileMap[x, y], x, y));
-            }
-        }
-
-        StaticBatchTiles();
-    }
-
-    public void EraseMap()
-    {
-        foreach (Transform parent in tileParents.Values)
-        {
-            Destroy(parent.gameObject);
-        }
-
-        runtimeTiles.Clear();
-        tileParents.Clear();
-    }
-
-    public void UpdateChunk(int x, int y)
-    {
-
-    }
-
-    private void SetupTileContainers()
-    {
-        tileParents = new Dictionary<TileData.Type, Transform>();
-        //tileChuncks = new Dictionary<TileData.Type, List<TileChunk>>();
-
-        foreach (TileData.Type tileType in Enum.GetValues(typeof(TileData.Type)))
-        {
-            Transform containerTransform = new GameObject(tileType + "_Container").transform;
-            containerTransform.parent = tileContainer;
-            tileParents.Add(tileType, containerTransform);
-            //tileChuncks.Add(tileType, new List<TileChunk>());
-        }
+        Application.targetFrameRate = -1;
     }
 
     private GameObject PlaceTile(TileData.Type type, int x, int y)
@@ -113,59 +74,81 @@ public class TileRenderer : Singleton<TileRenderer>
                 break;
         }
 
-        return Instantiate(tilePrefab, TileGenerator.GridToWorldPosition(x, y), Quaternion.identity, tileParents[type]);
+        return Instantiate(tilePrefab, TileGenerator.GridToWorldPosition(x, y), Quaternion.Euler(0, Random.Range(0, 6) * 60, 0), tileContainer);
     }
 
-    private void StaticBatchTiles()
+    public void CreateChunks()
     {
-        foreach (Transform parent in tileParents.Values)
+        Vector2Int mapSize = TileGenerator.Instance.mapSize;
+
+        //Group tiles by chunk
+        for (int y = 0; y <= mapSize.y - batchSize; y += batchSize)
         {
-            RuntimeCombiner rtc = parent.gameObject.AddComponent<RuntimeCombiner>();
-            rtc.UseFirstMaterial();
-            rtc.useInt32Buffers = true;
+            for (int x = 0; x <= mapSize.x - batchSize; x += batchSize)
+            {
+                TileChunk newChunk = new TileChunk();
+
+                newChunk.minCoords = new Vector2Int(x, y);
+                newChunk.container = new GameObject($"Chunk_({x}, {y})");
+                newChunk.container.transform.parent = tileContainer;
+
+                tileChunks.Add(newChunk);
+            }
         }
 
-        //foreach (TileData.Type type in tileChuncks.Keys)
-        //{
-        //    GameObject[] combineBuffer = new GameObject[6];
-        //    for (int i = 0; i < tileChuncks[type].Count; i++)
-        //    {
-        //        if (i == 6)
-        //        {
-        //            GameObject combineObj = new GameObject("Tiles_Batch");
-        //            combineObj.transform.parent = tileParents[type];
+        //Convert chunks to single mesh objects
+        for (int i = 0; i < tileChunks.Count; i++)
+        {
+            tileChunks[i].combiner = tileChunks[i].container.AddComponent<RuntimeCombiner>();
+            tileChunks[i].combiner.sharedMaterial = tilePaletteMaterial;
 
-        //            for (int b = 0; b < combineBuffer.Length; b++)
-        //            {
-        //                combineBuffer[b].transform.parent = combineObj.transform;
-        //            }
+            tileChunks[i].combiner.combineOnStart = false;
+            tileChunks[i].combiner.useInt32Buffers = true;
+            tileChunks[i].combiner.destroyChildMeshes = true;
+            tileChunks[i].combiner.destroyAllChildren = true;
 
-        //            RuntimeCombiner rtCombine = combineObj.AddComponent<RuntimeCombiner>();
-        //            rtCombine.UseFirstMaterial();
-        //            rtCombine.useInt32Buffers = true;
+        }
+    }
 
-        //            combineBuffer = new GameObject[combineBuffer.Length];
-        //        }
-        //        else
-        //        {
-        //            //combineBuffer[i % combineBuffer.Length] = tileChuncks[type][i];
-        //        }
+    public TileChunk GetChunkContainingTile(int x, int y)
+    {
+        if (x < 0 || x >= TileGenerator.Instance.mapSize.x || y < 0 || y >= TileGenerator.Instance.mapSize.y)
+            return null;
 
-        //        GameObject combineObj1 = new GameObject("Tile_Batch");
-        //        combineObj1.transform.parent = tileParents[type];
+        foreach (TileChunk chunk in tileChunks)
+            if (x >= chunk.minCoords.x && x < chunk.minCoords.x + batchSize && y >= chunk.minCoords.y && y < chunk.minCoords.y + batchSize)
+                return chunk;
 
-        //        for (int b = 0; b < combineBuffer.Length; b++)
-        //        {
-        //            combineBuffer[b].transform.parent = combineObj1.transform;
-        //        }
+        return null;
+    }
 
-        //        RuntimeCombiner rtCombine1 = combineObj1.AddComponent<RuntimeCombiner>();
-        //        rtCombine1.UseFirstMaterial();
-        //        rtCombine1.useInt32Buffers = true;
+    public void DrawChunk(TileChunk chunk)
+    {
+        //Get a local copy of the tile map data for just this chunk
+        TileData.Type[,] chunkMap = new TileData.Type[batchSize, batchSize];
 
-        //        combineBuffer = new GameObject[combineBuffer.Length];
-        //    }
-        //}
+        for (int y = 0; y < batchSize; y++)
+            for (int x = 0; x < batchSize; x++)
+                chunkMap[x, y] = TileGenerator.Instance.map[x + chunk.minCoords.x, y + chunk.minCoords.y];
+
+        //Place new tiles based on the map data
+        for (int y = 0; y < batchSize; y++)
+            for (int x = 0; x < batchSize; x++)
+                PlaceTile(chunkMap[x, y], x + chunk.minCoords.x, y + chunk.minCoords.y).transform.parent = chunk.container.transform;
+
+        chunk.combiner.Combine();
+    }
+
+    public void DrawAllChunks()
+    {
+        foreach (TileChunk chunk in tileChunks)
+            DrawChunk(chunk);
+
+        int vertexCount = 0;
+        foreach (TileChunk chunk in tileChunks)
+            vertexCount += chunk.container.GetComponent<MeshFilter>().sharedMesh.vertexCount;
+
+        Debug.Log(vertexCount);
     }
 
 }

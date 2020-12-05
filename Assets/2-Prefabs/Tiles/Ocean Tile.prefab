@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2167128475472968018}
   - component: {fileID: 2167128475472968013}
-  - component: {fileID: -2696794987767700891}
   m_Layer: 0
   m_Name: Ocean Tile
   m_TagString: Untagged
@@ -48,21 +47,6 @@ MonoBehaviour:
   type: 0
   gridPosition: {x: 0, y: 0}
   adjacentTiles: []
---- !u!114 &-2696794987767700891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2167128475472968014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f21a0ab6989407498415a9ae03122e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  combineOnStart: 1
-  sharedMaterial: {fileID: 2100000, guid: dc53055695f57054fbbf7bdc4796d1fa, type: 2}
-  useInt32Buffers: 0
 --- !u!1 &8873583867315479574
 GameObject:
   m_ObjectHideFlags: 0
